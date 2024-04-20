@@ -16,8 +16,9 @@ services:
       - elasticsearch
 
   elasticsearch:
-    container_name: elasticsearch
     image: elasticsearch:7.17.8
+    deploy:
+      replicas: 1
     ports:
       - 9200:9200
       - 9300:9300
