@@ -1,0 +1,42 @@
+services:
+  localstack:
+    image: localstack/localstack:3.3
+    deploy:
+      replicas: 1
+    ports:
+      - 4566:4566
+      - 4510-4559:4510-4559
+    environment:
+      DEBUG: 1
+      OPENSEARCH_CUSTOM_BACKEND: "http://elasticsearch:9200"
+    volumes:
+      - localstack_lib:/var/lib/localstack
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    depends_on:
+      - elasticsearch
+
+  elasticsearch:
+    container_name: elasticsearch
+    image: elasticsearch:7.17.8
+    ports:
+      - 9200:9200
+      - 9300:9300
+    environment:
+      node.name: elastic-localstack
+      cluster.name: elastic-localstack
+      discovery.type: single-node
+      xpack.security.enabled: true
+      bootstrap.memory_lock: true
+      ELASTIC_PASSWORD: ${ELASTIC_PASSWORD}
+      ES_JAVA_OPTS: "-Xms512m -Xmx512m"
+    volumes:
+      - esdata:/usr/share/elasticsearch/data
+
+networks:
+  default:
+    name: localstack
+    driver: bridge
+
+volumes:
+  localstack_lib:
+  esdata:
