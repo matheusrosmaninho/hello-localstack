@@ -4,8 +4,8 @@ resource "aws_key_pair" "localstack_instance_key" {
 }
 
 resource "aws_instance" "localstack_instance" {
-  ami = "ami-04e5276ebb8451442"
-  instance_type = "t2.micro"
+  ami = var.ec2Ami
+  instance_type = var.ec2InstanceType
 
   associate_public_ip_address = true
   disable_api_termination = false
