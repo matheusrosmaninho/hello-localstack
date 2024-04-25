@@ -8,7 +8,7 @@ services:
       - 4510-4559:4510-4559
     environment:
       DEBUG: 1
-      OPENSEARCH_CUSTOM_BACKEND: "http://elasticsearch:9200"
+      ES_CUSTOM_BACKEND: "http://elasticsearch:9200"
     volumes:
       - localstack_lib:/var/lib/localstack
       - /var/run/docker.sock:/var/run/docker.sock:ro
