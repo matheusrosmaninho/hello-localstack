@@ -9,11 +9,13 @@ services:
     environment:
       DEBUG: 1
       ES_CUSTOM_BACKEND: "http://elasticsearch:9200"
+      LS_LOG: "error,warn,warning"
     volumes:
       - localstack_lib:/var/lib/localstack
       - /var/run/docker.sock:/var/run/docker.sock:ro
     depends_on:
       - elasticsearch
+      - minio
     networks:
       default:
         ipv4_address: 192.168.1.150
@@ -36,6 +38,24 @@ services:
     volumes:
       - esdata:/usr/share/elasticsearch/data
 
+  minio:
+    image: minio/minio:RELEASE.2024-04-18T19-09-19Z-cpuv1
+    deploy:
+      replicas: 1
+    expose:
+      - 9000
+      - 9001
+    ports:
+      - 9000:9000
+      - 9001:9001
+    volumes:
+      - mdata:/data
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
+      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
+
+
 networks:
   default:
     name: localstack
@@ -47,3 +67,4 @@ networks:
 volumes:
   localstack_lib:
   esdata:
+  mdata:
